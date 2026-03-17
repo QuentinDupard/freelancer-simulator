@@ -455,7 +455,7 @@
           <div class="input-wrap">
             <input type="number" id="daysWorked" value="17" min="0" max="365" />
           </div>
-          <span class="badge badge-green">Market Avg</span>
+          <span class="badge badge-orange" id="daysBadge">Below Avg</span>
           <div class="tooltip-wrap">
             <span class="info-icon">i</span>
             <span class="tooltip">Average billable days per month for freelancers in France</span>
@@ -474,10 +474,10 @@
             <span class="input-prefix">&euro;</span>
             <input type="number" id="rate" value="450" min="0" />
           </div>
-          <span class="badge badge-orange" id="rateBadge">Average</span>
+          <span class="badge badge-green" id="rateBadge">Market Avg</span>
           <div class="tooltip-wrap">
             <span class="info-icon">i</span>
-            <span class="tooltip">Your daily or hourly billing rate</span>
+            <span class="tooltip">Based on our current consultant pool</span>
           </div>
           <div class="toggle-group">
             <button class="toggle-btn" data-period="hour" data-target="rate">Per Hour</button>
@@ -493,10 +493,10 @@
             <span class="input-prefix">&euro;</span>
             <input type="number" id="expenses" value="1000" min="0" />
           </div>
-          <span class="badge badge-blue">Realistic</span>
+          <span class="badge badge-green" id="expensesBadge">Market Avg</span>
           <div class="tooltip-wrap">
             <span class="info-icon">i</span>
-            <span class="tooltip">Monthly professional expenses (tools, office, transport, etc.)</span>
+            <span class="tooltip">Professional expenses: coworking, software subscriptions, hardware, transport, accounting fees, insurance, training, meals</span>
           </div>
           <div class="toggle-group">
             <button class="toggle-btn active" data-period="month" data-target="expenses">Per Month</button>
@@ -839,30 +839,81 @@
       // Update best net display
       document.getElementById('bestNet').textContent = formatEuro(bestDisposable);
 
+      // Update days badge
+      const daysVal = parseFloat(document.getElementById('daysWorked').value) || 0;
+      const daysBadge = document.getElementById('daysBadge');
+      if (state.daysPeriod === 'month') {
+        if (daysVal >= 23) {
+          daysBadge.textContent = 'Above Avg';
+          daysBadge.className = 'badge badge-red';
+        } else if (daysVal >= 18) {
+          daysBadge.textContent = 'Market Avg';
+          daysBadge.className = 'badge badge-green';
+        } else {
+          daysBadge.textContent = 'Below Avg';
+          daysBadge.className = 'badge badge-orange';
+        }
+      } else {
+        if (daysVal >= 252) {
+          daysBadge.textContent = 'Above Avg';
+          daysBadge.className = 'badge badge-red';
+        } else if (daysVal >= 216) {
+          daysBadge.textContent = 'Market Avg';
+          daysBadge.className = 'badge badge-green';
+        } else {
+          daysBadge.textContent = 'Below Avg';
+          daysBadge.className = 'badge badge-orange';
+        }
+      }
+
       // Update rate badge
       const rate = parseFloat(document.getElementById('rate').value) || 0;
       const rateBadge = document.getElementById('rateBadge');
       if (state.ratePeriod === 'day') {
-        if (rate < 300) {
-          rateBadge.textContent = 'Low';
-          rateBadge.className = 'badge badge-red';
-        } else if (rate < 500) {
-          rateBadge.textContent = 'Average';
-          rateBadge.className = 'badge badge-orange';
-        } else {
-          rateBadge.textContent = 'High';
+        if (rate >= 400) {
+          rateBadge.textContent = 'Market Avg';
           rateBadge.className = 'badge badge-green';
+        } else {
+          rateBadge.textContent = 'Below Avg';
+          rateBadge.className = 'badge badge-orange';
         }
       } else {
-        if (rate < 40) {
-          rateBadge.textContent = 'Low';
+        if (rate >= 76) {
+          rateBadge.textContent = 'Above Avg';
           rateBadge.className = 'badge badge-red';
-        } else if (rate < 65) {
-          rateBadge.textContent = 'Average';
-          rateBadge.className = 'badge badge-orange';
-        } else {
-          rateBadge.textContent = 'High';
+        } else if (rate >= 50) {
+          rateBadge.textContent = 'Market Avg';
           rateBadge.className = 'badge badge-green';
+        } else {
+          rateBadge.textContent = 'Below Avg';
+          rateBadge.className = 'badge badge-orange';
+        }
+      }
+
+      // Update expenses badge
+      const expVal = parseFloat(document.getElementById('expenses').value) || 0;
+      const expensesBadge = document.getElementById('expensesBadge');
+      if (state.expensesPeriod === 'month') {
+        if (expVal > 1000) {
+          expensesBadge.textContent = 'Above Avg';
+          expensesBadge.className = 'badge badge-red';
+        } else if (expVal >= 500) {
+          expensesBadge.textContent = 'Market Avg';
+          expensesBadge.className = 'badge badge-green';
+        } else {
+          expensesBadge.textContent = 'Below Avg';
+          expensesBadge.className = 'badge badge-orange';
+        }
+      } else {
+        if (expVal > 12000) {
+          expensesBadge.textContent = 'Above Avg';
+          expensesBadge.className = 'badge badge-red';
+        } else if (expVal >= 6000) {
+          expensesBadge.textContent = 'Market Avg';
+          expensesBadge.className = 'badge badge-green';
+        } else {
+          expensesBadge.textContent = 'Below Avg';
+          expensesBadge.className = 'badge badge-orange';
         }
       }
 

@@ -849,13 +849,18 @@
       const cfg = RATES[structureKey];
 
       if (structureKey === 'hightekers') {
-        // Portage salarial with Hightekers
-        const afterFee = grossRevenue * (1 - cfg.managementFeePercent);
-        const available = afterFee - expenses;
-        const netSalary = Math.max(0, available / cfg.chargesMultiplier * (1 + cfg.portageBonus));
-        const annualTax = calcAnnualIncomeTax(netSalary * 12);
+        // Hightekers: disposable income = 58-65% of gross revenue
+        // 65% at low revenues, scaling down to 58% at high revenues
+        const maxPct = 0.65;
+        const minPct = 0.58;
+        // Scale: at €5k/mo gross -> 65%, at €20k/mo gross -> 58%
+        const t = Math.min(1, Math.max(0, (grossRevenue - 5000) / 15000));
+        const pct = maxPct - t * (maxPct - minPct);
+        const disposable = Math.max(0, grossRevenue * pct);
+        // Net salary is disposable + estimated income tax
+        const annualTax = calcAnnualIncomeTax(disposable * 12);
         const monthlyTax = annualTax / 12;
-        const disposable = netSalary - monthlyTax;
+        const netSalary = disposable + monthlyTax;
         return { netSalary: Math.round(netSalary), disposable: Math.round(disposable) };
       }
 

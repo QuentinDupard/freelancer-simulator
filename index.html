@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Freelancer Earnings Simulator – France</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --accent: #10b981;
+      --accent-light: #ecfdf5;
+      --accent-border: #a7f3d0;
+      --blue: #3b82f6;
+      --blue-light: #eff6ff;
+      --orange: #f59e0b;
+      --orange-light: #fffbeb;
+      --red: #ef4444;
+      --red-light: #fef2f2;
+      --purple: #8b5cf6;
+      --purple-light: #f5f3ff;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: var(--text);
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 24px; }
+    .header-logo { font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+    .header-nav { display: flex; gap: 16px; }
+    .header-nav a { color: #d1d5db; text-decoration: none; font-size: 14px; }
+    .header-nav a:hover { color: white; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .btn-login { color: white; background: none; border: 1px solid #6b7280; padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .btn-start { color: var(--text); background: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
+
+    .hero {
+      text-align: center;
+      padding: 40px 24px 24px;
+    }
+    .market-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .flag { font-size: 18px; }
+    .hero h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+    .hero p { color: var(--text-muted); font-size: 16px; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .field { margin-bottom: 20px; }
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 12px;
+      flex: 1;
+      max-width: 280px;
+      transition: border-color 0.2s;
+    }
+    .input-wrap:focus-within { border-color: var(--accent); }
+    .input-prefix {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-right: 4px;
+    }
+    .input-wrap input {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      padding: 10px 0;
+      width: 100%;
+      font-family: inherit;
+      background: transparent;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+    .badge-green { background: var(--accent-light); color: #059669; border: 1px solid var(--accent-border); }
+    .badge-orange { background: var(--orange-light); color: #d97706; border: 1px solid #fde68a; }
+    .badge-red { background: var(--red-light); color: var(--red); border: 1px solid #fecaca; }
+    .badge-blue { background: var(--blue-light); color: var(--blue); border: 1px solid #bfdbfe; }
+
+    .info-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: help;
+      position: relative;
+    }
+
+    .toggle-group {
+      display: flex;
+      background: var(--bg);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .toggle-btn {
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    .summary-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .summary-box {
+      flex: 1;
+      padding: 16px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+    .summary-box.highlight {
+      background: var(--accent-light);
+      border-color: var(--accent-border);
+    }
+    .summary-box .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .summary-box .value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .cta-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--text);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.9; }
+
+    /* Right panel - results table */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .share-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .results-table th {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: right;
+      padding: 8px 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .results-table th:first-child { text-align: left; }
+    .results-table td {
+      padding: 14px 12px;
+      font-size: 15px;
+      text-align: right;
+      border-top: 1px solid var(--border);
+    }
+    .results-table td:first-child {
+      text-align: left;
+      font-weight: 500;
+    }
+    .results-table tr.highlight-row td {
+      background: var(--accent-light);
+      border-color: var(--accent-border);
+    }
+    .results-table tr.highlight-row td:first-child {
+      border-left: 3px solid var(--accent);
+      border-radius: 8px 0 0 8px;
+    }
+    .results-table tr.highlight-row td:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    .best-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      position: relative;
+      top: -8px;
+      margin-left: 4px;
+    }
+
+    .disclaimer {
+      margin-top: 24px;
+      padding: 16px;
+      background: var(--orange-light);
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #92400e;
+    }
+    .disclaimer strong { color: #b45309; }
+
+    .tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+    .tooltip-wrap .tooltip {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 10;
+      margin-bottom: 6px;
+    }
+    .tooltip-wrap:hover .tooltip { display: block; }
+
+    /* Formulas section */
+    .formulas-section {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 24px 48px;
+    }
+    .formulas-section h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .formula-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .formula-cards { grid-template-columns: 1fr; }
+    }
+    .formula-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .formula-card h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .formula-card .color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .formula-card table {
+      width: 100%;
+      font-size: 13px;
+      border-collapse: collapse;
+    }
+    .formula-card table td {
+      padding: 5px 0;
+      border-bottom: 1px solid var(--bg);
+    }
+    .formula-card table td:last-child {
+      text-align: right;
+      font-weight: 600;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .formula-card .formula-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.4;
+    }
+    .formula-card .formula-equation {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Salary Calculator
+      </div>
+      <div class="header-nav">
+        <a href="#">Partners</a>
+        <a href="#">Businesses</a>
+        <a href="#">Freelancers</a>
+      </div>
+    </div>
+    <div class="header-right">
+      <span style="font-size:14px; color:#9ca3af;">Abroad: France</span>
+      <a href="#" style="color:#d1d5db; text-decoration:none; font-size:14px;">Salary Calculator</a>
+      <a href="#" style="color:#d1d5db; text-decoration:none; font-size:14px;">Pricing</a>
+      <button class="btn-login">Login</button>
+      <button class="btn-start">Get Started</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="market-badge">
+      <span class="flag">🇫🇷</span> France Market
+    </div>
+    <h1>Freelancer Earnings Simulator</h1>
+    <p>Discover how much you can earn under different French business structures</p>
+  </div>
+
+  <!-- Main content -->
+  <div class="container">
+    <!-- Left: Inputs -->
+    <div class="card">
+      <div class="card-title">Your freelance revenue</div>
+
+      <div class="field">
+        <div class="field-label">Days worked</div>
+        <div class="input-row">
+          <div class="input-wrap">
+            <input type="number" id="daysWorked" value="17" min="0" max="365" />
+          </div>
+          <span class="badge badge-green">Market Avg</span>
+          <div class="tooltip-wrap">
+            <span class="info-icon">i</span>
+            <span class="tooltip">Average billable days per month for freelancers in France</span>
+          </div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" data-period="month" data-target="days">Per Month</button>
+            <button class="toggle-btn" data-period="year" data-target="days">Per Year</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Your rate</div>
+        <div class="input-row">
+          <div class="input-wrap">
+            <span class="input-prefix">&euro;</span>
+            <input type="number" id="rate" value="450" min="0" />
+          </div>
+          <span class="badge badge-orange" id="rateBadge">Average</span>
+          <div class="tooltip-wrap">
+            <span class="info-icon">i</span>
+            <span class="tooltip">Your daily or hourly billing rate</span>
+          </div>
+          <div class="toggle-group">
+            <button class="toggle-btn" data-period="hour" data-target="rate">Per Hour</button>
+            <button class="toggle-btn active" data-period="day" data-target="rate">Per Day</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Expenses</div>
+        <div class="input-row">
+          <div class="input-wrap">
+            <span class="input-prefix">&euro;</span>
+            <input type="number" id="expenses" value="1000" min="0" />
+          </div>
+          <span class="badge badge-blue">Realistic</span>
+          <div class="tooltip-wrap">
+            <span class="info-icon">i</span>
+            <span class="tooltip">Monthly professional expenses (tools, office, transport, etc.)</span>
+          </div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" data-period="month" data-target="expenses">Per Month</button>
+            <button class="toggle-btn" data-period="year" data-target="expenses">Per Year</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary boxes -->
+      <div class="summary-row">
+        <div class="summary-box">
+          <div class="label">
+            Gross revenue
+            <div class="tooltip-wrap">
+              <span class="info-icon">i</span>
+              <span class="tooltip">Days worked × Rate</span>
+            </div>
+          </div>
+          <div class="value" id="grossRevenue">&euro;7,650</div>
+        </div>
+        <div class="summary-box highlight">
+          <div class="label">
+            Best net salary
+            <div class="tooltip-wrap">
+              <span class="info-icon">i</span>
+              <span class="tooltip">Highest net salary across all structures</span>
+            </div>
+          </div>
+          <div class="value" id="bestNet">&euro;4,200</div>
+        </div>
+      </div>
+
+      <button class="cta-btn" onclick="window.open('https://mon-entreprise.urssaf.fr/simulateurs/comparaison-r%C3%A9gimes-sociaux','_blank')">
+        Get My Exact Calculation &rarr;
+      </button>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="card">
+      <div class="results-header">
+        <div class="card-title">Your freelance income</div>
+        <button class="share-btn" onclick="shareResults()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          Share Results
+        </button>
+      </div>
+
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>
+              Net Salary
+              <div class="tooltip-wrap" style="display:inline-flex;vertical-align:middle;margin-left:4px;">
+                <span class="info-icon">i</span>
+                <span class="tooltip">After social charges, before income tax</span>
+              </div>
+            </th>
+            <th>
+              Disposable Income
+              <div class="tooltip-wrap" style="display:inline-flex;vertical-align:middle;margin-left:4px;">
+                <span class="info-icon">i</span>
+                <span class="tooltip">After social charges and income tax</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody">
+        </tbody>
+      </table>
+
+      <div class="disclaimer">
+        <strong>Disclaimer:</strong> This assessment is indicative based on 2025-2026 rates. We advise you to always request a detailed simulation adapted to your situation.
+        <br><br>
+        <button class="cta-btn" style="margin:0;background:transparent;color:#92400e;border:1px solid #d97706;padding:10px 20px;width:auto;" onclick="window.open('https://mon-entreprise.urssaf.fr/simulateurs/comparaison-r%C3%A9gimes-sociaux','_blank')">
+          Use Official URSSAF Simulator
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulas Section -->
+  <div class="formulas-section">
+    <h2>Calculation Formulas by Structure</h2>
+    <div class="formula-cards">
+
+      <!-- SASU -->
+      <div class="formula-card">
+        <h3><span class="color-dot" style="background:#8b5cf6"></span> SASU</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+          President = assimilé salarié (general social security regime)
+        </p>
+        <div class="formula-equation">
+          grossSalary = revenue - expenses<br>
+          charges = grossSalary × 0.82<br>
+          netSalary = grossSalary / 1.82<br>
+          incomeTax = netSalary × progressiveRate<br>
+          disposable = netSalary - incomeTax
+        </div>
+        <table>
+          <tr><td>Employer charges</td><td>~54% of net</td></tr>
+          <tr><td>Employee charges</td><td>~28% of net</td></tr>
+          <tr><td>Total charges</td><td>~82% of net</td></tr>
+          <tr><td>Health / Maternity</td><td>13%</td></tr>
+          <tr><td>Retirement (base)</td><td>17.75%</td></tr>
+          <tr><td>Retirement (compl.)</td><td>~8%</td></tr>
+          <tr><td>Family allowances</td><td>5.25%</td></tr>
+          <tr><td>CSG + CRDS</td><td>9.7%</td></tr>
+          <tr><td>Unemployment</td><td>N/A (no rights)</td></tr>
+        </table>
+        <p class="formula-note">
+          PASS 2026: €47,100/year. No minimum charges if no salary. Dividends taxed at flat 30% (PFU) with no social charges.
+        </p>
+      </div>
+
+      <!-- EURL -->
+      <div class="formula-card">
+        <h3><span class="color-dot" style="background:#f59e0b"></span> EURL</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+          Manager = TNS (Travailleur Non-Salarié)
+        </p>
+        <div class="formula-equation">
+          grossSalary = revenue - expenses<br>
+          charges = grossSalary × 0.45<br>
+          netSalary = grossSalary / 1.45<br>
+          incomeTax = netSalary × progressiveRate<br>
+          disposable = netSalary - incomeTax
+        </div>
+        <table>
+          <tr><td>Total charges</td><td>~45% of net</td></tr>
+          <tr><td>Health / Maternity</td><td>0.5–6.5%</td></tr>
+          <tr><td>Retirement (base)</td><td>17.75%</td></tr>
+          <tr><td>Retirement (compl.)</td><td>~8-9%</td></tr>
+          <tr><td>Family allowances</td><td>0–3.1%</td></tr>
+          <tr><td>Disability / Death</td><td>1.3%</td></tr>
+          <tr><td>CSG + CRDS</td><td>9.7%</td></tr>
+        </table>
+        <p class="formula-note">
+          Minimum annual charges ~€1,224 even with no revenue. Dividends above 10% of capital subject to social charges. 26% abattement on new assiette (reform 2025).
+        </p>
+      </div>
+
+      <!-- Entreprise Individuelle -->
+      <div class="formula-card">
+        <h3><span class="color-dot" style="background:#10b981"></span> Entreprise Individuelle</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+          Sole proprietor = TNS regime (simplified)
+        </p>
+        <div class="formula-equation">
+          grossSalary = revenue - expenses<br>
+          charges = grossSalary × 0.45<br>
+          netSalary = grossSalary / 1.45<br>
+          incomeTax = netSalary × progressiveRate<br>
+          disposable = netSalary - incomeTax
+        </div>
+        <table>
+          <tr><td>Total charges</td><td>~45% of net</td></tr>
+          <tr><td>Health / Maternity</td><td>0.5–6.5%</td></tr>
+          <tr><td>Retirement (base)</td><td>17.75%</td></tr>
+          <tr><td>Retirement (compl.)</td><td>~8-9%</td></tr>
+          <tr><td>Family allowances</td><td>0–3.1%</td></tr>
+          <tr><td>Disability / Death</td><td>1.3%</td></tr>
+          <tr><td>CSG + CRDS</td><td>9.7%</td></tr>
+        </table>
+        <p class="formula-note">
+          Same TNS rates as EURL. No limited liability (personal assets at risk). Simpler admin. Micro-entreprise option: flat 21.2% (services BIC) or 25.6% (liberal BNC) on turnover.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // =============================================
+    // FORMULAS & RATES (2025-2026 France)
+    // =============================================
+
+    const RATES = {
+      // SASU: President is "assimilé salarié"
+      // Total social charges ≈ 82% of net salary
+      // Meaning: to get X net, company pays X * 1.82
+      sasu: {
+        totalChargesOnNet: 0.82,  // 82% of net = employer (54%) + employee (28%)
+        chargesMultiplier: 1.82,  // grossForCompany = net * 1.82
+        label: 'SASU',
+      },
+
+      // EURL: Gérant majoritaire is TNS
+      // Total social charges ≈ 45% of net salary
+      // Meaning: to get X net, company pays X * 1.45
+      eurl: {
+        totalChargesOnNet: 0.45,  // ~45% of net
+        chargesMultiplier: 1.45,
+        label: 'EURL',
+      },
+
+      // Entreprise Individuelle (régime réel, not micro)
+      // Same TNS regime as EURL ≈ 45% of net
+      ei: {
+        totalChargesOnNet: 0.45,
+        chargesMultiplier: 1.45,
+        label: 'Entreprise Individuelle',
+      },
+
+      // Hightekers / Portage Salarial (dummy competitive data)
+      hightekers: {
+        managementFeePercent: 0.05,  // ~5% management fee
+        totalChargesOnNet: 0.82,     // Same regime as salaried
+        chargesMultiplier: 1.82,
+        portageBonus: 0.03,          // 3% optimization advantage
+        label: 'Hightekers',
+      },
+
+      // Competitors / Portage Salarial generic
+      competitors: {
+        managementFeePercent: 0.10,  // ~10% management fee
+        totalChargesOnNet: 0.82,
+        chargesMultiplier: 1.82,
+        label: 'Competitors',
+      },
+    };
+
+    // French progressive income tax brackets 2025 (on annual income)
+    const TAX_BRACKETS = [
+      { limit: 11294, rate: 0.00 },
+      { limit: 28797, rate: 0.11 },
+      { limit: 82341, rate: 0.30 },
+      { limit: 177106, rate: 0.41 },
+      { limit: Infinity, rate: 0.45 },
+    ];
+
+    // =============================================
+    // STATE
+    // =============================================
+    let state = {
+      daysPeriod: 'month',  // month | year
+      ratePeriod: 'day',    // hour | day
+      expensesPeriod: 'month', // month | year
+    };
+
+    // =============================================
+    // CALCULATION ENGINE
+    // =============================================
+
+    function getMonthlyValues() {
+      let days = parseFloat(document.getElementById('daysWorked').value) || 0;
+      let rate = parseFloat(document.getElementById('rate').value) || 0;
+      let expenses = parseFloat(document.getElementById('expenses').value) || 0;
+
+      // Normalize to monthly
+      if (state.daysPeriod === 'year') days = days / 12;
+      if (state.ratePeriod === 'hour') rate = rate * 8; // 8h workday -> daily rate
+      if (state.expensesPeriod === 'year') expenses = expenses / 12;
+
+      const grossRevenue = days * rate;
+      return { days, rate, expenses, grossRevenue };
+    }
+
+    function calcAnnualIncomeTax(annualNet) {
+      // Apply 10% standard deduction for professional expenses (abattement forfaitaire)
+      const taxableIncome = annualNet * 0.9;
+      let tax = 0;
+      let prev = 0;
+      for (const bracket of TAX_BRACKETS) {
+        if (taxableIncome <= prev) break;
+        const taxable = Math.min(taxableIncome, bracket.limit) - prev;
+        tax += taxable * bracket.rate;
+        prev = bracket.limit;
+      }
+      return tax;
+    }
+
+    function calculateStructure(grossRevenue, expenses, structureKey) {
+      const cfg = RATES[structureKey];
+
+      if (structureKey === 'hightekers') {
+        // Portage salarial with Hightekers
+        const afterFee = grossRevenue * (1 - cfg.managementFeePercent);
+        const available = afterFee - expenses;
+        const netSalary = Math.max(0, available / cfg.chargesMultiplier * (1 + cfg.portageBonus));
+        const annualTax = calcAnnualIncomeTax(netSalary * 12);
+        const monthlyTax = annualTax / 12;
+        const disposable = netSalary - monthlyTax;
+        return { netSalary: Math.round(netSalary), disposable: Math.round(disposable) };
+      }
+
+      if (structureKey === 'competitors') {
+        // Generic portage salarial
+        const afterFee = grossRevenue * (1 - cfg.managementFeePercent);
+        const available = afterFee - expenses;
+        const netSalary = Math.max(0, available / cfg.chargesMultiplier);
+        const annualTax = calcAnnualIncomeTax(netSalary * 12);
+        const monthlyTax = annualTax / 12;
+        const disposable = netSalary - monthlyTax;
+        return { netSalary: Math.round(netSalary), disposable: Math.round(disposable) };
+      }
+
+      // SASU, EURL, EI
+      const available = grossRevenue - expenses;
+      const netSalary = Math.max(0, available / cfg.chargesMultiplier);
+      const annualTax = calcAnnualIncomeTax(netSalary * 12);
+      const monthlyTax = annualTax / 12;
+      const disposable = netSalary - monthlyTax;
+      return { netSalary: Math.round(netSalary), disposable: Math.round(disposable) };
+    }
+
+    function formatEuro(val) {
+      return '€' + val.toLocaleString('fr-FR');
+    }
+
+    // =============================================
+    // UI UPDATE
+    // =============================================
+
+    function updateResults() {
+      const { grossRevenue, expenses } = getMonthlyValues();
+
+      // Update gross revenue display
+      document.getElementById('grossRevenue').textContent = formatEuro(Math.round(grossRevenue));
+
+      // Calculate all structures
+      const structures = [
+        { key: 'hightekers', ...calculateStructure(grossRevenue, expenses, 'hightekers') },
+        { key: 'ei', ...calculateStructure(grossRevenue, expenses, 'ei') },
+        { key: 'sasu', ...calculateStructure(grossRevenue, expenses, 'sasu') },
+        { key: 'eurl', ...calculateStructure(grossRevenue, expenses, 'eurl') },
+        { key: 'competitors', ...calculateStructure(grossRevenue, expenses, 'competitors') },
+      ];
+
+      // Find best disposable income
+      let bestDisposable = -Infinity;
+      let bestKey = '';
+      structures.forEach(s => {
+        if (s.disposable > bestDisposable) {
+          bestDisposable = s.disposable;
+          bestKey = s.key;
+        }
+      });
+
+      // Update best net display
+      document.getElementById('bestNet').textContent = formatEuro(bestDisposable);
+
+      // Update rate badge
+      const rate = parseFloat(document.getElementById('rate').value) || 0;
+      const rateBadge = document.getElementById('rateBadge');
+      if (state.ratePeriod === 'day') {
+        if (rate < 300) {
+          rateBadge.textContent = 'Low';
+          rateBadge.className = 'badge badge-red';
+        } else if (rate < 500) {
+          rateBadge.textContent = 'Average';
+          rateBadge.className = 'badge badge-orange';
+        } else {
+          rateBadge.textContent = 'High';
+          rateBadge.className = 'badge badge-green';
+        }
+      } else {
+        if (rate < 40) {
+          rateBadge.textContent = 'Low';
+          rateBadge.className = 'badge badge-red';
+        } else if (rate < 65) {
+          rateBadge.textContent = 'Average';
+          rateBadge.className = 'badge badge-orange';
+        } else {
+          rateBadge.textContent = 'High';
+          rateBadge.className = 'badge badge-green';
+        }
+      }
+
+      // Build results table
+      const tbody = document.getElementById('resultsBody');
+      tbody.innerHTML = '';
+
+      const labels = {
+        hightekers: 'Hightekers',
+        ei: 'Entreprise Individuelle',
+        sasu: 'SASU',
+        eurl: 'EURL',
+        competitors: 'Competitors',
+      };
+
+      structures.forEach(s => {
+        const tr = document.createElement('tr');
+        const isBest = s.key === bestKey;
+        if (isBest) tr.className = 'highlight-row';
+
+        tr.innerHTML = `
+          <td>${labels[s.key]}${isBest ? '<span class="best-badge">Best</span>' : ''}</td>
+          <td>${formatEuro(s.netSalary)}</td>
+          <td>${formatEuro(s.disposable)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // =============================================
+    // EVENT LISTENERS
+    // =============================================
+
+    // Input changes
+    document.querySelectorAll('input[type="number"]').forEach(input => {
+      input.addEventListener('input', updateResults);
+    });
+
+    // Toggle buttons
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const target = this.dataset.target;
+        const period = this.dataset.period;
+
+        // Update active state within the same group
+        this.parentElement.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Update state
+        if (target === 'days') state.daysPeriod = period;
+        if (target === 'rate') state.ratePeriod = period;
+        if (target === 'expenses') state.expensesPeriod = period;
+
+        updateResults();
+      });
+    });
+
+    function shareResults() {
+      const { grossRevenue, expenses } = getMonthlyValues();
+      const sasu = calculateStructure(grossRevenue, expenses, 'sasu');
+      const eurl = calculateStructure(grossRevenue, expenses, 'eurl');
+      const ei = calculateStructure(grossRevenue, expenses, 'ei');
+
+      const text = `Freelancer Earnings Simulator 🇫🇷
+Gross Revenue: ${formatEuro(Math.round(grossRevenue))}/mo
+
+SASU: Net ${formatEuro(sasu.netSalary)} | Disposable ${formatEuro(sasu.disposable)}
+EURL: Net ${formatEuro(eurl.netSalary)} | Disposable ${formatEuro(eurl.disposable)}
+EI: Net ${formatEuro(ei.netSalary)} | Disposable ${formatEuro(ei.disposable)}`;
+
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => alert('Results copied to clipboard!'));
+      }
+    }
+
+    // Initial calculation
+    updateResults();
+  </script>
+</body>
+</html>
